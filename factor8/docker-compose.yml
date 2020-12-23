@@ -1,0 +1,29 @@
+version: "2"
+
+
+services:
+  lb:
+    container_name: lb
+    build: lb
+    restart: unless-stopped
+    networks:
+      - backend
+    ports:
+      - "80:80"
+
+  # app
+  app:
+    image: tutum/hello-world
+    restart: unless-stopped
+    networks:
+      backend:
+        aliases:
+          - apps
+    expose:
+      - 80
+    depends_on:
+      - lb
+
+networks:
+  backend:
+      driver: bridge
